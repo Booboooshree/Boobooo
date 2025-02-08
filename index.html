@@ -2,19 +2,303 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <!-- React Dependencies -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.development.js"></script>
     <title>Our Valentine's Journey</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: #fce8e8;
+                overflow-x: hidden;
+            }
+
+            /* Mobile Responsive Styles */
+            @media screen and (max-width: 480px) {
+                /* Memory Cards */
+                .memory-card {
+                    flex-direction: column;
+                    margin: 20px 10px;
+                }
+
+                .card-image {
+                    min-height: 250px;
+                }
+
+                .card-content {
+                    padding: 20px;
+                }
+
+                .card-content h2 {
+                    font-size: 22px;
+                }
+
+                /* Game Section */
+                #game-grid {
+                    grid-template-columns: repeat(2, 1fr) !important;
+                    gap: 10px !important;
+                    padding: 10px;
+                }
+
+                .game-card {
+                    font-size: 20px;
+                }
+
+                /* Question Card */
+                .question-card {
+                    width: 95%;
+                    padding: 25px;
+                    margin: 10px;
+                }
+
+                .button-group {
+                    flex-direction: column;
+                    gap: 15px;
+                }
+
+                .yes-btn, .no-btn {
+                    width: 100%;
+                    padding: 15px;
+                }
+            }
+
+            /* Tablet Responsive Styles */
+            @media screen and (min-width: 481px) and (max-width: 768px) {
+                .memory-card {
+                    width: 95%;
+                    margin: 20px auto;
+                }
+
+                #game-grid {
+                    grid-template-columns: repeat(3, 1fr) !important;
+                    gap: 12px !important;
+                }
+
+                .card-content h2 {
+                    font-size: 24px;
+                }
+            }
+
+            /* Landscape Mode Fixes */
+            @media screen and (max-height: 500px) and (orientation: landscape) {
+                .memory-section {
+                    padding: 40px 20px;
+                    min-height: auto;
+                }
+
+                .card-image {
+                    min-height: 200px;
+                }
+
+                #game-grid {
+                    max-width: 500px;
+                }
+            }
+
+            /* General Responsive Improvements */
+            html, body {
+                overflow-x: hidden;
+                width: 100%;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* Modal Responsive Fixes */
+            @media screen and (max-width: 480px) {
+                .memory-modal-container {
+                    width: 95%;
+                    max-height: 80vh;
+                }
+
+                .memory-modal-image {
+                    max-height: 60vh;
+                }
+
+                .memory-modal-title {
+                    font-size: 14px;
+                    padding: 10px;
+                }
+            }
+
+            /* Navigation Responsive Fixes */
+            @media screen and (max-width: 480px) {
+                .navbar-content {
+                    padding: 10px;
+                }
+
+                .memory-icon {
+                    width: 40px;
+                    height: 40px;
+                }
+
+                .memory-icon span {
+                    font-size: 18px;
+                }
+            }
+
+            /* Success Message Responsive */
+            @media screen and (max-width: 480px) {
+                .success-message {
+                    padding: 15px;
+                }
+
+                .success-message h2 {
+                    font-size: 20px;
+                }
+
+                /* WhatsApp button responsive */
+                a[href^="https://wa.me/"] {
+                    padding: 10px 20px !important;
+                    width: 100%;
+                    box-sizing: border-box;
+                    margin-top: 20px !important;
+                }
+            }
+
+            /* Loading Performance Improvements */
+            @media screen and (max-width: 768px) {
+                * {
+                    -webkit-tap-highlight-color: transparent;
+                }
+
+                .memory-card, .question-card, .game-card {
+                    will-change: transform;
+                }
+            }
+
+            /* Better Touch Areas for Mobile */
+            @media screen and (max-width: 480px) {
+                button, 
+                .memory-icon, 
+                .game-card,
+                .modal-close {
+                    min-width: 44px;
+                    min-height: 44px;
+                }
+
+                .navbar-icons {
+                    gap: 10px;
+                }
+            }
+
+            /* Safe Area Handling for Modern Phones */
+            @supports (padding: max(0px)) {
+                .modern-navbar {
+                    padding-left: max(20px, env(safe-area-inset-left));
+                    padding-right: max(20px, env(safe-area-inset-right));
+                }
+
+                .footer {
+                    padding-bottom: max(16px, env(safe-area-inset-bottom));
+                }
+            }
+
+            .reasons-section {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 60px 20px;
+            }
+
+            .game-card {
+            aspect-ratio: 1;
+            background: #ff4b6c;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #fce8e8;
-            overflow-x: hidden;
+        .game-card.flipped {
+            background: white;
+            color: #ff4b6c;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card-content {
+            text-align: center;
+        }
+
+        .card-text {
+            font-size: 12px;
+            margin-top: 8px;
+            color: #ff4b6c;
+        }
+
+        /* Styling for the reasons container */
+        .reasons-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Heart button styling */
+        .reveal-reason-btn {
+            background: none;
+            border: none;
+            font-size: 40px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .reveal-reason-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* Reason card styling */
+        .reason-card {
+            background: rgba(255, 75, 108, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .reason-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Counter styling */
+        .reason-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff4b6c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
         }
 
         .modern-navbar {
@@ -493,6 +777,38 @@
         </div>
     </section>
 
+    <section class="reasons-section">
+        <div class="reasons-container">
+            <h2 style="color: #ff4b6c; margin-bottom: 24px;">Why I Love You</h2>
+            <p>Click the heart to reveal a new reason 💝</p>
+            
+            <div class="reason-counter">0/10 Reasons</div>
+            
+            <button class="reveal-reason-btn" onclick="revealNextReason()">❤️</button>
+            
+            <div id="reasons-list">
+                <!-- Reasons will be added here dynamically -->
+            </div>
+        </div>
+    </section>
+    
+    <section class="memory-section">
+        <div class="memory-card">
+            <div class="card-content" style="width: 100%;">
+                <div id="legal-love-game-root">
+                    <div class="w-full max-w-4xl mx-auto p-6">
+                        <div class="text-center mb-8">
+                            <h2 style="color: #ff4b6c; font-size: 24px; margin-bottom: 16px;">Boobooo's Matrix</h2>
+                            <p style="color: #666;">Humaari duniya ke kuch sweet elements dekho!</p>
+                        </div>
+                        <div id="game-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 600px; margin: 0 auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Valentine Question -->
     <section class="memory-section">
         <div class="question-card">
@@ -511,6 +827,208 @@
     </div>
 
     <script>
+
+        // Game data
+        const gameCards = [
+            { id: 1, content: "👩‍⚖️", text: "People's Democractic Republic of Boobooo" },
+            { id: 2, content: "🐘", text: "Appu" },
+            { id: 3, content: "🐻", text: "Cuddlu" },
+            { id: 4, content: "👅", text: "Thing you miss the most" },
+            { id: 5, content: "✨", text: "Our Playlist" },
+            { id: 6, content: "🤖", text: "Alexa, tumhaari only sautan" }
+        ];
+
+        // Game state
+        let flippedCards = [];
+        let matchedPairs = [];
+        let gameStarted = false;
+
+        // Initialize game
+        function initializeGame() {
+            const gameGrid = document.getElementById('game-grid');
+            const duplicatedCards = [...gameCards, ...gameCards]
+                .sort(() => Math.random() - 0.5)
+                .map((card, index) => ({...card, uniqueId: index}));
+
+            gameGrid.innerHTML = '';
+            duplicatedCards.forEach(card => {
+                const cardElement = createCardElement(card);
+                gameGrid.appendChild(cardElement);
+            });
+
+            flippedCards = [];
+            matchedPairs = [];
+            gameStarted = true;
+        }
+
+        // Create card element
+        function createCardElement(card) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'game-card';
+            cardDiv.innerHTML = `
+                <div class="card-content">
+                    <div class="card-front">❤️</div>
+                    <div class="card-back" style="display: none">
+                        <div>${card.content}</div>
+                        <div class="card-text">${card.text}</div>
+                    </div>
+                </div>
+            `;
+
+            cardDiv.addEventListener('click', () => handleCardClick(cardDiv, card));
+            return cardDiv;
+        }
+
+        // Handle card click
+        function handleCardClick(cardElement, card) {
+            if (
+                flippedCards.length >= 2 ||
+                flippedCards.includes(card.uniqueId) ||
+                matchedPairs.includes(card.uniqueId)
+            ) return;
+
+            flipCard(cardElement, true);
+            flippedCards.push(card.uniqueId);
+
+            if (flippedCards.length === 2) {
+                checkMatch();
+            }
+        }
+
+        // Flip card animation
+        function flipCard(cardElement, flipped) {
+            const front = cardElement.querySelector('.card-front');
+            const back = cardElement.querySelector('.card-back');
+            
+            if (flipped) {
+                cardElement.classList.add('flipped');
+                front.style.display = 'none';
+                back.style.display = 'block';
+            } else {
+                cardElement.classList.remove('flipped');
+                front.style.display = 'block';
+                back.style.display = 'none';
+            }
+        }
+
+        // Check for match
+        function checkMatch() {
+            const cards = document.querySelectorAll('.game-card');
+            const [firstId, secondId] = flippedCards;
+            
+            const firstCard = [...cards][firstId];
+            const secondCard = [...cards][secondId];
+
+            if (gameCards[firstId % gameCards.length].id === gameCards[secondId % gameCards.length].id) {
+                matchedPairs.push(...flippedCards);
+                flippedCards = [];
+                
+                if (matchedPairs.length === gameCards.length * 2) {
+                    setTimeout(showWinMessage, 500);
+                }
+            } else {
+                setTimeout(() => {
+                    flipCard(firstCard, false);
+                    flipCard(secondCard, false);
+                    flippedCards = [];
+                }, 1000);
+            }
+        }
+
+        // Show win message
+        function showWinMessage() {
+            const gameRoot = document.getElementById('legal-love-game-root');
+            gameRoot.innerHTML = `
+                <div style="text-align: center; padding: 32px;">
+                    <h3 style="color: #ff4b6c; font-size: 24px; margin-bottom: 16px;">
+                        You Won! Just like you won my heart! ❤️
+                    </h3>
+                    <button onclick="initializeGame()" 
+                            style="padding: 12px 24px; 
+                                background: #ff4b6c; 
+                                color: white; 
+                                border: none; 
+                                border-radius: 50px; 
+                                cursor: pointer;
+                                transition: all 0.3s ease;">
+                        Play Again
+                    </button>
+                </div>
+            `;
+        }
+
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Your existing DOMContentLoaded code remains here
+            
+            // Initialize the memory game
+            initializeGame();
+        });
+
+        const loveReasons = [
+                "The way you make everything an adventure, even finding parking 😄",
+                "How you remember the tiniest details about our conversations",
+                "Your smile that lights up my whole world ✨",
+                "The way you care about my family",
+                "How you make me feel safe and loved 💕",
+                "Your dedication to learning new things (jaise innuendo)",
+                "The sparkle in your eyes when you're excited",
+                "How you always know how to make me laugh",
+                "Your thoughtfulness in choosing the perfect gifts 🎁",
+                "The way you make every moment special just by being you 💫"
+            ];
+
+            let revealedCount = 0;
+
+            function revealNextReason() {
+                if (revealedCount >= loveReasons.length) {
+                    // All reasons revealed - maybe show a special message
+                    const reasonsList = document.getElementById('reasons-list');
+                    const specialMessage = document.createElement('div');
+                    specialMessage.className = 'reason-card';
+                    specialMessage.innerHTML = `
+                        <p style="color: #ff4b6c; font-size: 18px;">
+                            And there are countless more reasons why I love you! ❤️
+                        </p>
+                    `;
+                    reasonsList.appendChild(specialMessage);
+                    setTimeout(() => specialMessage.classList.add('visible'), 100);
+                    return;
+                }
+
+                // Create and add new reason
+                const reasonsList = document.getElementById('reasons-list');
+                const newReason = document.createElement('div');
+                newReason.className = 'reason-card';
+                newReason.textContent = loveReasons[revealedCount];
+                reasonsList.insertBefore(newReason, reasonsList.firstChild);
+                
+                // Update counter
+                revealedCount++;
+                document.querySelector('.reason-counter').textContent = 
+                    `${revealedCount}/${loveReasons.length} Reasons`;
+
+                // Animate the new reason
+                setTimeout(() => newReason.classList.add('visible'), 100);
+
+                // Add floating hearts animation
+                createFloatingHeart();
+            }
+
+            function createFloatingHeart() {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'fixed';
+                heart.style.fontSize = '24px';
+                heart.style.left = `${Math.random() * window.innerWidth}px`;
+                heart.style.top = '100%';
+                heart.style.animation = `floatUp 3s ease-out forwards`;
+                document.body.appendChild(heart);
+
+                // Remove heart after animation
+                setTimeout(() => heart.remove(), 3000);
+            }
+
         document.addEventListener('DOMContentLoaded', () => {
         const memoryIcons = document.querySelectorAll('.memory-icon');
         const modalOverlay = document.createElement('div');
@@ -664,6 +1182,29 @@
                         Your Eternal Parwaana,<br>
                         <span style="font-size: 20px; color: #ff4b6c; margin-top: 8px; display: inline-block;">Sajal</span>
                     </p>
+                    <!-- Add this new button -->
+                    <a href="https://wa.link/onqm5u" 
+                    target="_blank"
+                    style="
+                        display: inline-block;
+                        margin-top: 30px;
+                        padding: 12px 24px;
+                        background-color: #25D366;
+                        color: white;
+                        border-radius: 50px;
+                        text-decoration: none;
+                        font-weight: 500;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);"
+                    onmouseover="this.style.transform='translateY(-2px)'"
+                    onmouseout="this.style.transform='translateY(0)'">
+                        <span style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            </svg>
+                            Talk to Boobooo
+                        </span>
+                    </a>
                 </div>
             `;
             
