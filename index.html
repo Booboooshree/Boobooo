@@ -24,6 +24,29 @@
                 overflow-x: hidden;
             }
 
+            /* Add this to your existing styles */
+            .playlist-title {
+                color: #ff4b6c;
+                font-size: 2.5rem;
+                font-weight: 700;
+                text-align: center;
+                margin-bottom: 20px;
+                font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+                background: linear-gradient(135deg, #ff4b6c 0%, #ff8fa3 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-fill-color: transparent;
+                letter-spacing: -0.02em;
+            }
+            
+            @media (max-width: 480px) {
+                .playlist-title {
+                    font-size: 2rem;
+                    margin-bottom: 15px;
+                }
+            }
+
             .spotify-embed-wrapper {
                 width: 100%;
                 max-width: 800px;
@@ -944,6 +967,7 @@
     <!-- Spotify Playlist Section -->
     <section class="memory-section">
         <div class="spotify-embed-wrapper">
+            <h2 class="playlist-title">Hamaare Gaane 🎶</h2>
             <div class="spotify-embed-inner">
                 <iframe 
                     style="border-radius:12px" 
