@@ -918,8 +918,12 @@
             
             const firstCard = [...cards][firstId];
             const secondCard = [...cards][secondId];
-
-            if (gameCards[firstId % gameCards.length].id === gameCards[secondId % gameCards.length].id) {
+        
+            // Get the actual card data for comparison
+            const firstCardData = gameCards[(firstId % (gameCards.length * 2)) % gameCards.length];
+            const secondCardData = gameCards[(secondId % (gameCards.length * 2)) % gameCards.length];
+        
+            if (firstCardData.id === secondCardData.id) {
                 matchedPairs.push(...flippedCards);
                 flippedCards = [];
                 
