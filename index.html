@@ -837,34 +837,33 @@
             { id: 5, content: "✨", text: "Our Playlist" },
             { id: 6, content: "🤖", text: "Alexa, tumhaari only sautan" }
         ];
-
-        // Game state
+        
         let flippedCards = [];
-        let matchedPairs = [];
+        let matchedPairs = new Set();
         let gameStarted = false;
-
-        // Initialize game
+        
         function initializeGame() {
             const gameGrid = document.getElementById('game-grid');
             const duplicatedCards = [...gameCards, ...gameCards]
                 .sort(() => Math.random() - 0.5)
                 .map((card, index) => ({...card, uniqueId: index}));
-
+        
             gameGrid.innerHTML = '';
             duplicatedCards.forEach(card => {
                 const cardElement = createCardElement(card);
                 gameGrid.appendChild(cardElement);
             });
-
+        
             flippedCards = [];
-            matchedPairs = [];
+            matchedPairs = new Set();
             gameStarted = true;
         }
-
-        // Create card element
+        
         function createCardElement(card) {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'game-card';
+            cardDiv.dataset.id = card.id;
+            cardDiv.dataset.uniqueId = card.uniqueId;
             cardDiv.innerHTML = `
                 <div class="card-content">
                     <div class="card-front">❤️</div>
@@ -874,28 +873,26 @@
                     </div>
                 </div>
             `;
-
+        
             cardDiv.addEventListener('click', () => handleCardClick(cardDiv, card));
             return cardDiv;
         }
-
-        // Handle card click
+        
         function handleCardClick(cardElement, card) {
             if (
-                flippedCards.length >= 2 ||
-                flippedCards.includes(card.uniqueId) ||
-                matchedPairs.includes(card.uniqueId)
+                flippedCards.length >= 2 || 
+                matchedPairs.has(card.uniqueId) ||
+                flippedCards.includes(card.uniqueId)
             ) return;
-
+        
             flipCard(cardElement, true);
             flippedCards.push(card.uniqueId);
-
+        
             if (flippedCards.length === 2) {
-                checkMatch();
+                setTimeout(() => checkMatch(), 500);
             }
         }
-
-        // Flip card animation
+        
         function flipCard(cardElement, flipped) {
             const front = cardElement.querySelector('.card-front');
             const back = cardElement.querySelector('.card-back');
@@ -910,36 +907,33 @@
                 back.style.display = 'none';
             }
         }
-
-        // Check for match
+        
         function checkMatch() {
             const cards = document.querySelectorAll('.game-card');
             const [firstId, secondId] = flippedCards;
             
-            const firstCard = [...cards][firstId];
-            const secondCard = [...cards][secondId];
-        
-            // Get the actual card data for comparison
-            const firstCardData = gameCards[(firstId % (gameCards.length * 2)) % gameCards.length];
-            const secondCardData = gameCards[(secondId % (gameCards.length * 2)) % gameCards.length];
-        
-            if (firstCardData.id === secondCardData.id) {
-                matchedPairs.push(...flippedCards);
+            const firstCard = cards[firstId];
+            const secondCard = cards[secondId];
+            
+            if (firstCard.dataset.id === secondCard.dataset.id) {
+                // Cards match
+                matchedPairs.add(firstId);
+                matchedPairs.add(secondId);
                 flippedCards = [];
                 
-                if (matchedPairs.length === gameCards.length * 2) {
+                if (matchedPairs.size === gameCards.length * 2) {
                     setTimeout(showWinMessage, 500);
                 }
             } else {
+                // Cards don't match
                 setTimeout(() => {
                     flipCard(firstCard, false);
                     flipCard(secondCard, false);
                     flippedCards = [];
-                }, 1000);
+                }, 500);
             }
         }
-
-        // Show win message
+        
         function showWinMessage() {
             const gameRoot = document.getElementById('legal-love-game-root');
             gameRoot.innerHTML = `
@@ -949,12 +943,12 @@
                     </h3>
                     <button onclick="initializeGame()" 
                             style="padding: 12px 24px; 
-                                background: #ff4b6c; 
-                                color: white; 
-                                border: none; 
-                                border-radius: 50px; 
-                                cursor: pointer;
-                                transition: all 0.3s ease;">
+                                   background: #ff4b6c; 
+                                   color: white; 
+                                   border: none; 
+                                   border-radius: 50px; 
+                                   cursor: pointer;
+                                   transition: all 0.3s ease;">
                         Play Again
                     </button>
                 </div>
