@@ -25,17 +25,57 @@
             }
         
             /* Hero Section Styling */
-            .hero-section {
-                min-height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: rgba(255, 255, 255, 0.8);
-                backdrop-filter: blur(10px);
-                position: relative;
-                overflow: hidden;
-                margin-top: -80px; /* Adjust based on your navbar height */
-                padding-top: 80px;
+                .hero-section {
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(255, 255, 255, 0.8);
+                    backdrop-filter: blur(10px);
+                    position: relative;
+                    overflow: hidden;
+                    margin-top: -80px; /* Adjust based on your navbar height */
+                    padding-top: 80px;
+                }
+    
+                /* Add to your existing styles */
+            .hero-title {
+                font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+                font-size: clamp(3rem, 8vw, 6rem);
+                font-weight: 700;
+                background: linear-gradient(135deg, #ff4b6c 0%, #ff8fa3 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-fill-color: transparent;
+                margin: 0;
+                padding: 0;
+                line-height: 1.2;
+                letter-spacing: -0.02em;
+                min-height: 1.2em;
+                text-align: center;
+            }
+            
+            .cursor {
+                display: inline-block;
+                width: 3px;
+                height: 1em;
+                background: #ff4b6c;
+                margin-left: 5px;
+                animation: blink 1s infinite;
+                vertical-align: middle;
+            }
+            
+            @keyframes blink {
+                50% { opacity: 0; }
+            }
+            
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .hero-title {
+                    font-size: clamp(2rem, 6vw, 4rem);
+                    padding: 0 20px;
+                }
             }
             
             .hero-content {
@@ -861,7 +901,7 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
-            <h1 class="hero-title">Boobooo</h1>
+            <h1 id="typewriter" class="hero-title"></h1>
             <div class="floating-hearts"></div>
         </div>
     </section>
@@ -968,6 +1008,55 @@
     </div>
 
     <script>
+
+        // Add this to your existing script section
+        document.addEventListener('DOMContentLoaded', function() {
+            const phrases = [
+                "Meri Boobooo",
+                "Meri Tukdiii",
+                "Meri Booboooshree",
+                "Meri Ray of Astha ☀️"
+            ];
+            
+            const typewriter = document.getElementById('typewriter');
+            let phraseIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let isPaused = false;
+            
+            function type() {
+                const currentPhrase = phrases[phraseIndex];
+                
+                if (isDeleting) {
+                    // Removing characters
+                    charIndex--;
+                    typewriter.innerHTML = currentPhrase.substring(0, charIndex) + '<span class="cursor"></span>';
+                } else {
+                    // Adding characters
+                    charIndex++;
+                    typewriter.innerHTML = currentPhrase.substring(0, charIndex) + '<span class="cursor"></span>';
+                }
+                
+                // Speed control
+                let typeSpeed = isDeleting ? 100 : 150;
+                
+                // If complete phrase is typed
+                if (!isDeleting && charIndex === currentPhrase.length) {
+                    // Pause at end of phrase
+                    typeSpeed = 2000;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    typeSpeed = 500;
+                }
+                
+                setTimeout(type, typeSpeed);
+            }
+            
+            // Start the typewriter effect
+            setTimeout(type, 1000);
+        });
 
         // Game data
         const gameCards = [
